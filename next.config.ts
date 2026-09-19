@@ -7,8 +7,9 @@ const nextConfig: NextConfig = {
 
   // firebase-admin's auth module pulls in jwks-rsa, which requires jose's
   // ESM build via require() — bundling that breaks at runtime on Vercel.
-  // Leaving it external lets Node's own module resolution handle it instead.
-  serverExternalPackages: ["firebase-admin"],
+  // Externalizing firebase-admin alone doesn't stop Turbopack from still
+  // bundling its transitive deps, so jwks-rsa and jose need to be named too.
+  serverExternalPackages: ["firebase-admin", "jwks-rsa", "jose"],
 
   experimental: {
     // Photos go up through a server action, which caps bodies at 1 MB by
