@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#63c66c"/>
+      <stop offset="55%" stop-color="#299968"/>
+      <stop offset="100%" stop-color="#24794c"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".5"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="118" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="118" fill="url(#sheen)"/>
+
+  <!-- Piggy bank: friendly, generic savings glyph -->
+  <ellipse cx="248" cy="308" rx="132" ry="98" fill="#fdfaf1"/>
+  <circle cx="368" cy="286" r="40" fill="#fdfaf1"/>
+  <path d="M124 292q-30-4-30 22t30 18Z" fill="#fdfaf1"/>
+  <path d="M204 214q-6-30 20-36-8 26 10 40Z" fill="#fdfaf1"/>
+
+  <rect x="220" y="196" width="70" height="18" rx="9" fill="#24794c"/>
+  <circle cx="255" cy="150" r="24" fill="#fdfaf1"/>
+  <circle cx="255" cy="150" r="24" fill="none" stroke="#24794c" stroke-width="5" stroke-opacity=".35"/>
+
+  <circle cx="384" cy="276" r="8" fill="#24794c"/>
+
+  <rect x="176" y="380" width="30" height="40" rx="12" fill="#fdfaf1"/>
+  <rect x="296" y="380" width="30" height="40" rx="12" fill="#fdfaf1"/>
+</svg>

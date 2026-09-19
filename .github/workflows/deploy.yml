@@ -1,0 +1,131 @@
+name: Deploy
+
+# Ships main to the DigitalOcean droplet behind fundcollection.mishkath.com.
+# The build runs *on the server*, because the droplet holds the .env and the
+# database, and a Next.js standalone bundle would still need both.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time. A second push waits rather than racing the first
+# through rsync and a restart.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  APP_DIR: /opt/mishkath-fund/app
+  APP_USER: mishkath
+  SERVICE: mishkath-fund
+  HEALTH_URL: https://fundcollection.mishkath.com/
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # Not `npm ci`: the committed lockfile is generated on macOS and omits the
+      # linux-only @emnapi/* optional deps that sharp pulls in, which makes
+      # `npm ci` fail outright on a linux runner.
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Unit tests
+        run: npm test
+
+      # Typecheck only. A full `next build` here would need DATABASE_URL, and
+      # the real build happens on the server anyway.
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+  deploy:
+    name: Deploy to droplet
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Load SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Pin the host key instead of trusting on first use.
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Sync source to server
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
+            --exclude '.git' \
+            --exclude 'node_modules' \
+            --exclude '.next' \
+            --exclude 'app/generated' \
+            --exclude 'tsconfig.tsbuildinfo' \
+            --exclude 'next-env.d.ts' \
+            `# Server-only state that --delete must never touch:` \
+            --exclude '.env' \
+            --exclude 'public/uploads' \
+            ./ "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ env.APP_DIR }}/"
+
+      - name: Build and restart
+        run: |
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" 'bash -euo pipefail -s' <<'REMOTE'
+            APP_DIR=/opt/mishkath-fund/app
+            APP_USER=mishkath
+
+            # rsync arrives as root and resets ownership; without this the app
+            # user cannot write next-env.d.ts and the build dies with EACCES.
+            chown -R "$APP_USER:$APP_USER" /opt/mishkath-fund
+
+            cd "$APP_DIR"
+
+            echo "::group::Install dependencies"
+            sudo -u "$APP_USER" npm install --no-audit --no-fund
+            echo "::endgroup::"
+
+            echo "::group::Prisma"
+            sudo -u "$APP_USER" npx --yes prisma generate
+            sudo -u "$APP_USER" npx --yes prisma db push
+            echo "::endgroup::"
+
+            echo "::group::Build"
+            # The droplet has 1 GB of RAM plus a 2 GB swapfile; an uncapped heap
+            # gets the build OOM-killed part way through.
+            sudo -u "$APP_USER" env NODE_OPTIONS=--max-old-space-size=1536 npm run build
+            echo "::endgroup::"
+
+            systemctl restart mishkath-fund
+          REMOTE
+
+      - name: Health check
+        run: |
+          for attempt in $(seq 1 10); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$HEALTH_URL" || true)
+            if [ "$code" = "200" ]; then
+              echo "Healthy after ${attempt} attempt(s): HTTP $code"
+              exit 0
+            fi
+            echo "Attempt ${attempt}: HTTP ${code:-no response}; retrying in 10s"
+            sleep 10
+          done
+          echo "Service did not return HTTP 200 at $HEALTH_URL"
+          exit 1
+
+      - name: Show service logs on failure
+        if: failure()
+        run: |
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            'systemctl status mishkath-fund --no-pager -l | head -30; tail -50 /var/log/mishkath-fund.log'
