@@ -25,12 +25,117 @@
 }
 
 :root {
-  --page: #f0f8f1;
+  --page: #effbf2;
   --glass-bg: rgba(248, 252, 247, 0.7);
   --glass-border: rgba(240, 248, 238, 0.85);
   --glass-shadow: 0 10px 30px -12px rgba(28, 38, 32, 0.28),
     0 2px 8px -3px rgba(28, 38, 32, 0.13);
   --nav-bg: rgba(255, 255, 255, 0.92);
+}
+
+/* Home screen — a warm, poster-like take on the shared-savings dashboard. */
+.home-screen { display: flex; flex-direction: column; gap: 12px; }
+.home-hero { position: relative; height: 210px; margin: -4px -4px 0; overflow: hidden; }
+.home-hero::before { content: ""; position: absolute; inset: -40px -25px 5px; background: radial-gradient(circle at 55% 48%, rgba(115,226,143,.38), transparent 43%), radial-gradient(circle at 12% 28%, rgba(255,255,255,.95), transparent 42%); filter: blur(10px); }
+.home-brand { position: absolute; z-index: 3; top: 40px; left: 4px; width: 52%; }
+.home-brand h1 { display: flex; flex-direction: column; font-family: var(--font-wordmark); font-weight: 800; letter-spacing: -.065em; line-height: .75; filter: drop-shadow(0 3px 0 #fff) drop-shadow(0 0 5px #fff); }
+.home-brand h1 span:first-child { color: #073c31; font-size: clamp(2.1rem, 9.5vw, 3.15rem); }
+.home-brand h1 span:last-child { color: #08a45e; font-size: clamp(1.55rem, 6.8vw, 2.35rem); margin-top: 8px; }
+.home-brand p { display: inline-flex; margin-top: 14px; border: 1px solid rgba(255,255,255,.92); border-radius: 999px; background: rgba(255,255,255,.72); padding: 6px 11px; color: #356257; font-size: clamp(.66rem, 2.6vw, .82rem); font-weight: 700; white-space: nowrap; box-shadow: 0 8px 22px rgba(30,84,59,.12); backdrop-filter: blur(12px); }
+.home-burst { position: absolute; top: -34px; right: 8px; transform: rotate(-68deg); color: #08aa61; font-family: var(--font-wordmark); font-size: 1.9rem; letter-spacing: -8px; -webkit-text-stroke: 4px white; paint-order: stroke; }
+.home-friends { position: absolute; z-index: 2; right: -46px; bottom: -2px; width: 68%; height: auto; filter: drop-shadow(0 12px 15px rgba(14,62,42,.2)); }
+.home-scribble { position: absolute; z-index: 4; top: 58px; right: 4px; width: 4.6rem; transform: rotate(-3deg); color: #099558; font-family: var(--font-wordmark); font-weight: 800; font-size: .62rem; line-height: 1.08; text-align: center; -webkit-text-stroke: 3px white; paint-order: stroke; }
+.home-profile { position: absolute; z-index: 5; top: 2px; right: 2px; }
+.home-profile > * { width: 2.75rem !important; height: 2.75rem !important; color: #063b30 !important; box-shadow: 0 10px 28px rgba(30,78,59,.18) !important; }
+
+.install-banner { display: flex; align-items: center; gap: 14px; min-height: 66px; border: 1px solid rgba(255,255,255,.9); border-radius: 999px; background: rgba(255,255,255,.62); padding: 0 20px; color: #07543f; font-size: clamp(.88rem, 4vw, 1.08rem); font-weight: 800; box-shadow: 0 11px 26px rgba(16,82,52,.12); backdrop-filter: blur(18px); }
+.install-banner > span:nth-child(2) { flex: 1; }
+.install-bell { position: relative; width: 20px; color: #058b51; font-size: 0; }
+.install-bell::before { content: ""; display: block; width: 18px; height: 19px; border-radius: 10px 10px 5px 5px; background: currentColor; }
+.install-bell::after { content: ""; position: absolute; left: 4px; bottom: -5px; width: 10px; height: 3px; border-radius: 50%; background: currentColor; }
+
+.pool-card { position: relative; min-height: 260px; overflow: hidden; border: 1px solid rgba(255,255,255,.7); border-radius: 28px; padding: 22px 22px 20px; color: white; background: linear-gradient(135deg,#18c56e 0%,#069e5a 48%,#037446 100%); box-shadow: 0 18px 34px -18px rgba(0,85,48,.65); isolation: isolate; }
+.pool-orb { position: absolute; z-index: -1; border-radius: 50%; background: rgba(72,235,139,.25); }
+.pool-orb-one { width: 280px; height: 280px; top: -175px; right: -25px; }
+.pool-orb-two { width: 170px; height: 170px; right: -95px; bottom: -95px; }
+.pool-leaf { position: absolute; right: 28px; top: 45px; width: 62px; height: 34px; border-radius: 100% 0 100% 0; transform: rotate(-25deg); background: rgba(146,255,188,.27); }
+.pool-label { display: flex; align-items: center; gap: 10px; max-width: 58%; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; font-size: clamp(.68rem,2.9vw,.85rem); }
+.pool-total { margin-top: 10px; font-size: clamp(2.5rem,12vw,3.6rem); font-weight: 800; line-height: .95; letter-spacing: -.045em; font-variant-numeric: tabular-nums; }
+.pool-month-chip,.pool-stats > div { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; background: rgba(255,255,255,.19); backdrop-filter: blur(10px); font-weight: 800; }
+.pool-month-chip { margin-top: 16px; padding: 9px 14px; font-size: clamp(.7rem,2.8vw,.85rem); }
+.pool-message { position: absolute; z-index: 1; top: 20px; right: 20px; width: 38%; transform: rotate(-6deg); font-family: var(--font-wordmark); font-size: clamp(.6rem,2.6vw,.78rem); font-weight: 700; line-height: 1.08; text-align: center; }
+.pool-message span { font-size: 1.5rem; vertical-align: -5px; }
+.pool-stats { position: relative; z-index: 1; margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.pool-stats > div { padding: 8px 13px; font-size: clamp(.62rem,2.6vw,.78rem); white-space: nowrap; }
+
+.home-activity { margin-top: 11px; }
+.activity-heading { display: flex; align-items: center; justify-content: space-between; padding: 0 3px 8px; color: #666d7a; }
+.activity-heading h2 { font-size: .83rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.activity-heading a { display: flex; align-items: center; gap: 3px; font-size: .82rem; font-weight: 700; }
+.transaction-stack { display: flex; flex-direction: column; gap: 8px; }
+.home-transaction { display: flex; align-items: center; gap: 12px; min-height: 76px; border: 1px solid rgba(255,255,255,.9); border-radius: 22px; background: rgba(255,255,255,.86); padding: 10px 14px; box-shadow: 0 9px 22px rgba(27,73,53,.1); }
+.home-transaction > :first-child { width: 48px; height: 48px; }
+.transaction-person { min-width: 0; flex: 1; display: flex; flex-direction: column; }
+.transaction-person strong { overflow: hidden; text-overflow: ellipsis; font-size: 1rem; white-space: nowrap; }
+.transaction-person span,.transaction-value span { color: #747987; font-size: .72rem; font-weight: 600; }
+.transaction-value { display: flex; max-width: 49%; flex-direction: column; align-items: flex-end; text-align: right; }
+.transaction-value strong { border-radius: 999px; background: #e5f8eb; padding: 6px 12px; font-size: 1rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.transaction-value .is-up { color: #07834d; }.transaction-value .is-down { color: #bd4141; background: #fee9e7; }
+.transaction-value span { margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.home-empty { border-radius: 26px; background: rgba(255,255,255,.75); }
+.growth-card { position: relative; display: flex; align-items: center; gap: 14px; overflow: hidden; min-height: 106px; border: 1px solid white; border-radius: 28px; background: rgba(235,255,242,.65); padding: 14px 20px; color: #07513e; box-shadow: 0 10px 28px rgba(25,85,55,.09); }
+.growth-card::after { content: ""; position: absolute; right: 40px; bottom: -28px; width: 85px; height: 65px; border-radius: 100% 0; transform: rotate(-25deg); background: rgba(102,214,132,.22); }
+.growth-icon { display: grid; flex: 0 0 62px; height: 62px; place-items: center; border-radius: 20px; background: rgba(166,237,186,.48); color: #07a45c; }
+.growth-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; }.growth-copy strong { font-size: .98rem; line-height: 1.12; }.growth-copy small { margin-top: 7px; font-size: .74rem; font-weight: 600; }
+.bottom-nav-shell { border: 1px solid rgba(255,255,255,.9); border-radius: 30px; background: rgba(255,255,255,.94); padding: 8px 6px; box-shadow: 0 18px 45px -14px rgba(18,60,53,.32); backdrop-filter: blur(22px); }
+.nav-add { box-shadow: 0 12px 24px -8px rgba(0,130,73,.65), inset 0 1px rgba(255,255,255,.5); }
+
+@media (max-width: 390px) {
+  .home-hero { height: 196px; }
+  .home-brand { top: 34px; }
+  .home-friends { right: -44px; width: 70%; }
+  .home-scribble { top: 50px; width: 4rem; font-size: .56rem; }
+  .pool-card { padding-inline: 18px; }
+  .pool-message { top: 18px; right: 18px; width: 36%; }
+  .bottom-nav-shell { padding-inline: 2px; }.bottom-nav-shell a span { min-width: 0; padding-inline: 8px; }
+}
+
+@media (max-width: 350px) {
+  main { padding-right: 14px; padding-left: 14px; }
+  .home-hero { height: 188px; margin-inline: 0; }
+  .home-brand { left: 0; top: 30px; width: 58%; }
+  .home-brand h1 span:first-child { font-size: 1.9rem; }
+  .home-brand h1 span:last-child { font-size: 1.4rem; }
+  .home-brand p { margin-top: 12px; padding: 6px 10px; font-size: .62rem; }
+  .home-friends { right: -36px; width: 72%; }
+  .home-scribble { top: 46px; right: 2px; width: 3.5rem; font-size: .5rem; }
+  .home-profile { right: 0; }
+  .home-profile > * { width: 2.4rem !important; height: 2.4rem !important; }
+
+  .install-banner { min-height: 56px; gap: 8px; padding-inline: 14px; font-size: .74rem; white-space: nowrap; }
+  .install-banner .size-6 { width: 1.15rem; height: 1.15rem; }
+
+  .pool-card { padding: 20px 15px 18px; }
+  .pool-label { gap: 7px; font-size: .64rem; }
+  .pool-total { margin-top: 8px; font-size: 2.15rem; }
+  .pool-month-chip { margin-top: 12px; gap: 6px; padding: 8px 11px; font-size: .66rem; }
+  .pool-message { top: 15px; right: 14px; width: 34%; font-size: .56rem; line-height: 1; }
+  .pool-message span { font-size: 1.2rem; }
+  .pool-stats { margin-top: 10px; gap: 6px; }
+  .pool-stats > div { min-width: 0; gap: 5px; padding: 7px 9px; font-size: .58rem; }
+  .pool-stats svg { width: .9rem; height: .9rem; flex-shrink: 0; }
+
+  .activity-heading h2 { font-size: .68rem; letter-spacing: .1em; }
+  .activity-heading a { font-size: .7rem; }
+  .home-transaction { gap: 9px; padding-inline: 10px; }
+  .transaction-person strong { font-size: .86rem; }
+  .transaction-value strong { padding-inline: 9px; font-size: .86rem; }
+  .transaction-person span, .transaction-value span { font-size: .62rem; }
+
+  .bottom-nav-shell { width: calc(100% - 1rem); }
+  .bottom-nav-shell a span { padding-inline: 5px; }
+  .bottom-nav-shell .nav-add { width: 3.5rem; height: 3.5rem; }
+  .bottom-nav-shell .nav-add svg { width: 2rem; height: 2rem; }
 }
 
 /* ------------------------------------------------------------------ *
