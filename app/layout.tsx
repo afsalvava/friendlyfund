@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Baloo_2, Nunito_Sans } from "next/font/google";
+import { Baloo_2, Caveat, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { Aurora } from "@/components/Aurora";
 import { AppShell } from "@/components/AppShell";
@@ -17,6 +17,13 @@ const baloo2 = Baloo_2({
   variable: "--font-baloo-2",
   subsets: ["latin"],
   weight: ["700", "800"],
+});
+
+// Handwritten script, for the "Small Contributions, Big Friendships" note.
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -53,7 +60,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${nunitoSans.variable} ${baloo2.variable} h-full`}
+      className={`${nunitoSans.variable} ${baloo2.variable} ${caveat.variable} h-full`}
     >
       <body className="min-h-full">
         <Aurora />

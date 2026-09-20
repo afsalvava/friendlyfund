@@ -68,8 +68,8 @@ export function AppShell({
     <ToastProvider>
       <AddSheetContext.Provider value={api}>
         {/* The phone frame: full-bleed on mobile, a centred device on desktop. */}
-        <div className="relative mx-auto flex min-h-dvh w-full max-w-[30rem] flex-col">
-          <main className="flex-1 px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-36">
+        <div className="relative mx-auto flex min-h-dvh w-full max-w-[34rem] flex-col">
+          <main className="flex-1 px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-40">
             {children}
           </main>
         </div>

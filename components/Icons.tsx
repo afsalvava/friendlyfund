@@ -27,7 +27,7 @@ export function HomeIcon({ filled, ...props }: IconProps) {
       <path
         d="M3.5 10.6 12 4l8.5 6.6V19a1.5 1.5 0 0 1-1.5 1.5h-3.4v-5.2a1.4 1.4 0 0 0-1.4-1.4h-2.4a1.4 1.4 0 0 0-1.4 1.4v5.2H5A1.5 1.5 0 0 1 3.5 19Z"
         fill={filled ? "currentColor" : "none"}
-        fillOpacity={filled ? 0.16 : 0}
+        fillOpacity={filled ? 1 : 0}
       />
     </Base>
   );
@@ -92,6 +92,16 @@ export function PlusIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <Base strokeWidth={2.4} {...props}>
       <path d="M12 5.5v13M5.5 12h13" />
+    </Base>
+  );
+}
+
+export function BellIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Base strokeWidth={2} {...props}>
+      <path d="M6.2 9.8a5.8 5.8 0 0 1 11.6 0c0 6 2.2 6.6 2.2 6.6H4s2.2-.6 2.2-6.6Z" />
+      <path d="M9.7 19.1a2.5 2.5 0 0 0 4.6 0" />
+      <path d="M12 4V2.8" />
     </Base>
   );
 }
@@ -227,6 +237,14 @@ export function MoneyIcon(props: SVGProps<SVGSVGElement>) {
       <circle cx="12" cy="12" r="8.2" />
       <path d="M12 7.4v9.2" />
       <path d="M14.6 9.4a2.6 2.6 0 0 0-2.6-1.2c-1.6 0-2.6.8-2.6 1.9 0 2.6 5.2 1.3 5.2 3.9 0 1.1-1 1.9-2.6 1.9a2.6 2.6 0 0 1-2.6-1.2" />
+    </Base>
+  );
+}
+
+export function HeartIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Base {...props}>
+      <path d="M12 20.5s-7.2-4.35-9.9-9.02C.5 8.1 2 4.6 5.4 3.8c2-.47 3.9.4 5.1 2.1a1 1 0 0 0 1 0c1.2-1.7 3.1-2.57 5.1-2.1 3.4.8 4.9 4.3 3.3 7.68C19.2 16.15 12 20.5 12 20.5Z" />
     </Base>
   );
 }

@@ -1,125 +1,79 @@
-import { CountUpRupees, Screen, Stagger, StaggerItem } from "@/components/Motion";
-import {
-  EmptyWalletArt,
-  MembersIcon,
-  ReceiptCheckIcon,
-  SproutIcon,
-  TrendUpIcon,
-  WalletIcon,
-} from "@/components/Icons";
+import Image from "next/image";
+import Link from "next/link";
+import { Avatar } from "@/components/Avatar";
+import { CountUpRupees, Screen } from "@/components/Motion";
+import { ChevronRightIcon, HeartIcon, MembersIcon, ReceiptCheckIcon, SproutIcon, TrendUpIcon, WalletIcon } from "@/components/Icons";
 import { AddFirstEntryButton } from "@/components/HomeActions";
-import { ProfileButton } from "@/components/ProfileButton";
-import { EmptyState, GlassCard, SectionLabel, TransactionRow } from "@/components/ui";
-import { isAdmin as checkIsAdmin } from "@/lib/auth";
+import { EmptyState } from "@/components/ui";
+import { relativeDate } from "@/lib/grouping";
+import { formatRupees } from "@/lib/money";
 import { getHomeSummary, getRecentTransactions } from "@/lib/queries";
-import { formatRupees, percentChange } from "@/lib/money";
 
 export default async function HomePage() {
-  const [summary, recent, admin] = await Promise.all([
+  const [summary, recent] = await Promise.all([
     getHomeSummary(),
-    getRecentTransactions(15),
-    checkIsAdmin(),
+    getRecentTransactions(4),
   ]);
-
-  const change = percentChange(
-    summary.totalPool,
-    summary.totalPool - summary.thisMonthNet
-  );
 
   return (
     <Screen>
-      <header className="mb-4 flex items-start gap-3">
-        <div className="flex-1 text-center">
-          <h1 className="font-wordmark text-[2.1rem] leading-none font-extrabold tracking-tight">
-            <span className="text-ink">Friendly</span>
-            <span className="text-turquoise">Fund</span>
-          </h1>
-          <p className="mt-1.5 text-sm font-medium text-ink-soft">
-            Saving together, one deposit at a time.
-          </p>
-        </div>
-        <ProfileButton isAdmin={admin} />
-      </header>
+      <div className="home-screen">
+        <section className="home-hero">
+          <Image
+            src="/home-screen-reference.png"
+            alt="Chanks Money Pool — friends save better together"
+            width={843}
+            height={1866}
+            priority
+            className="home-hero-reference"
+          />
+          <Link href="/admin" className="home-banner-hotspot" aria-label="Open notifications and account" />
+        </section>
 
-      {/* Total amount collected ------------------------------------------ */}
-      <div className="relative overflow-hidden rounded-[var(--radius-glass)] bg-gradient-to-br from-cyan to-cobalt p-6 text-white shadow-[0_14px_32px_-14px_rgba(18,60,53,0.55)]">
-        <SproutIcon className="absolute top-6 right-6 size-10 text-white/30" />
-        <p className="absolute top-[4.7rem] right-6 w-24 text-right text-[11px] leading-snug font-medium text-white/75">
-          Small contributions create big tomorrows.
-        </p>
-
-        <div className="relative flex items-center gap-2 text-white/85">
-          <WalletIcon className="size-4" />
-          <span className="text-xs font-bold tracking-[0.12em] uppercase">
-            Total Amount Collected
-          </span>
-        </div>
-
-        <p className="relative mt-2 text-[2.6rem] leading-none font-extrabold tracking-tight">
-          <CountUpRupees value={summary.totalPool} />
-        </p>
-
-        <div className="relative mt-4 space-y-1.5">
-          <div className="no-scrollbar flex flex-nowrap items-center gap-1.5 overflow-x-auto">
-            <Chip
-              label={`${formatRupees(summary.thisMonthNet, {
-                sign: summary.thisMonthNet > 0,
-              })} this month`}
-              icon={<TrendUpIcon className="size-3.5" />}
-            />
-            {change !== null && Math.abs(change) >= 0.1 && (
-              <Chip label={`${change > 0 ? "+" : "−"}${Math.abs(change).toFixed(1)}%`} />
-            )}
+        <section className="pool-card">
+          <div className="pool-orb pool-orb-one" /><div className="pool-orb pool-orb-two" /><div className="pool-leaf" />
+          <div className="pool-label"><WalletIcon className="size-5" /><span>Total amount collected</span></div>
+          <p className="pool-total"><CountUpRupees value={summary.totalPool} /></p>
+          <div className="pool-month-chip"><TrendUpIcon className="size-5" /><span>{formatRupees(summary.thisMonthNet, { sign: summary.thisMonthNet > 0 })} this month</span></div>
+          <div className="pool-message">
+            <p className="pool-message-text">Small<br />Contributions<br />Big Friendships</p>
+            <svg className="pool-message-squiggle" viewBox="0 0 100 14" preserveAspectRatio="none" fill="none" aria-hidden="true">
+              <path d="M2 9 C 16 1, 30 15, 45 7 S 72 -1, 86 8 S 96 12, 98 5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+            <HeartIcon className="pool-message-heart" />
           </div>
-          <div className="no-scrollbar flex flex-nowrap items-center gap-1.5 overflow-x-auto">
-            <Chip
-              label={`${summary.memberCount} ${
-                summary.memberCount === 1 ? "member" : "members"
-              }`}
-              icon={<MembersIcon className="size-3.5" />}
-            />
-            <Chip
-              label={`${summary.paidCount}/${summary.memberCount} paid this month`}
-              icon={<ReceiptCheckIcon className="size-3.5" />}
-            />
+          <div className="pool-stats">
+            <div><MembersIcon className="size-5" /><span>{summary.memberCount} {summary.memberCount === 1 ? "member" : "members"}</span></div>
+            <div><ReceiptCheckIcon className="size-5" /><span>{summary.paidCount}/{summary.memberCount} paid this month</span></div>
           </div>
-        </div>
+        </section>
+
+        <section className="home-activity">
+          <div className="activity-heading"><h2>Recent transactions</h2><Link href="/members">View all <ChevronRightIcon className="size-4" /></Link></div>
+          {recent.length === 0 ? (
+            <div className="home-empty"><EmptyState art={<SproutIcon className="w-20 text-turquoise" />} title="Nothing recorded yet" body="Add the first deposit and your group activity will appear here." action={<AddFirstEntryButton />} /></div>
+          ) : (
+            <div className="transaction-stack">
+              {recent.map((tx) => {
+                const isDeposit = tx.type === "DEPOSIT";
+                return (
+                  <Link href={`/members/${tx.memberId}`} className="home-transaction" key={tx.id}>
+                    <Avatar name={tx.memberName} photoUrl={tx.memberPhotoUrl} />
+                    <div className="transaction-person"><strong>{tx.memberName}</strong><span>{relativeDate(tx.date)}</span></div>
+                    <div className="transaction-value"><strong className={isDeposit ? "is-up" : "is-down"}>{isDeposit ? formatRupees(tx.amount, { sign: true }) : formatRupees(-tx.amount)}</strong><span>{tx.note || (isDeposit ? "Monthly contribution" : "Withdrawal")}</span></div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        <Link href="/stats" className="growth-card">
+          <span className="growth-icon"><SproutIcon className="size-11" /></span>
+          <span className="growth-copy"><strong>Small contributions<br />create big tomorrows.</strong><small>Stay consistent. Grow together.</small></span>
+          <ChevronRightIcon className="size-6" />
+        </Link>
       </div>
-
-      {/* Recent activity ------------------------------------------------ */}
-      <section className="mt-8">
-        <SectionLabel>Recent transactions</SectionLabel>
-
-        {recent.length === 0 ? (
-          <GlassCard>
-            <EmptyState
-              art={<EmptyWalletArt className="w-48" />}
-              title="Nothing recorded yet"
-              body="Tap the + button to log the first deposit and this list will fill up."
-              action={<AddFirstEntryButton />}
-            />
-          </GlassCard>
-        ) : (
-          <Stagger className="space-y-2">
-            {recent.map((tx) => (
-              <StaggerItem key={tx.id}>
-                <GlassCard>
-                  <TransactionRow tx={tx} href={`/members/${tx.memberId}`} />
-                </GlassCard>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        )}
-      </section>
     </Screen>
-  );
-}
-
-function Chip({ label, icon }: { label: string; icon?: React.ReactNode }) {
-  return (
-    <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-bold whitespace-nowrap text-ink">
-      {icon && <span className="text-turquoise">{icon}</span>}
-      {label}
-    </span>
   );
 }
