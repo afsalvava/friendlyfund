@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Avatar } from "@/components/Avatar";
 import { CountUpRupees, Screen } from "@/components/Motion";
-import { BellIcon, ChevronRightIcon, SproutIcon, WalletIcon } from "@/components/Icons";
+import { ChevronRightIcon, HeartIcon, MembersIcon, ReceiptCheckIcon, SproutIcon, TrendUpIcon, WalletIcon } from "@/components/Icons";
 import { AddFirstEntryButton } from "@/components/HomeActions";
 import { EmptyState } from "@/components/ui";
 import { relativeDate } from "@/lib/grouping";
@@ -19,34 +19,32 @@ export default async function HomePage() {
     <Screen>
       <div className="home-screen">
         <section className="home-hero">
-          <div className="hero-brand">
-            <h1 className="hero-title">Chanks Money Pool</h1>
-            <p className="hero-tagline">Friends save better together.</p>
-          </div>
-          <div className="hero-friends">
-            <Image
-              src="/chanks-friends.png"
-              alt="Three friends smiling together"
-              width={1685}
-              height={933}
-              priority
-              className="hero-friends-img"
-            />
-          </div>
-          <Link href="/admin" className="hero-bell" aria-label="Open notifications and account">
-            <BellIcon className="size-5" />
-            <span className="hero-bell-dot" aria-hidden="true" />
-          </Link>
+          <Image
+            src="/home-screen-reference.png"
+            alt="Chanks Money Pool — friends save better together"
+            width={843}
+            height={1866}
+            priority
+            className="home-hero-reference"
+          />
+          <Link href="/admin" className="home-banner-hotspot" aria-label="Open notifications and account" />
         </section>
 
         <section className="pool-card">
-          <div className="pool-amount">
-            <div className="pool-label"><WalletIcon className="size-5" /><span>Total amount collected</span></div>
-            <p className="pool-total"><CountUpRupees value={summary.totalPool} /></p>
-          </div>
+          <div className="pool-orb pool-orb-one" /><div className="pool-orb pool-orb-two" /><div className="pool-leaf" />
+          <div className="pool-label"><WalletIcon className="size-5" /><span>Total amount collected</span></div>
+          <p className="pool-total"><CountUpRupees value={summary.totalPool} /></p>
+          <div className="pool-month-chip"><TrendUpIcon className="size-5" /><span>{formatRupees(summary.thisMonthNet, { sign: summary.thisMonthNet > 0 })} this month</span></div>
           <div className="pool-message">
-            <SproutIcon className="pool-message-icon" />
             <p className="pool-message-text">Small<br />Contributions<br />Big Friendships</p>
+            <svg className="pool-message-squiggle" viewBox="0 0 100 14" preserveAspectRatio="none" fill="none" aria-hidden="true">
+              <path d="M2 9 C 16 1, 30 15, 45 7 S 72 -1, 86 8 S 96 12, 98 5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+            <HeartIcon className="pool-message-heart" />
+          </div>
+          <div className="pool-stats">
+            <div><MembersIcon className="size-5" /><span>{summary.memberCount} {summary.memberCount === 1 ? "member" : "members"}</span></div>
+            <div><ReceiptCheckIcon className="size-5" /><span>{summary.paidCount}/{summary.memberCount} paid this month</span></div>
           </div>
         </section>
 
