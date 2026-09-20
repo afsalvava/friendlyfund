@@ -39,7 +39,7 @@
 .home-hero { position: relative; z-index: 0; min-height: 178px; padding: 6px 2px 0; }
 .hero-brand { position: relative; z-index: 2; max-width: 80%; }
 .hero-title { font-family: var(--font-wordmark); font-size: clamp(1.1rem,5.6vw,1.55rem); font-weight: 800; line-height: 1.04; white-space: nowrap; color: var(--color-ink); }
-.hero-tagline { margin-top: 7px; font-size: .75rem; font-weight: 600; color: var(--color-ink-soft); }
+.hero-tagline { margin-top: 7px; margin-bottom: 16px; font-size: .75rem; font-weight: 600; color: var(--color-ink-soft); }
 .hero-friends { position: relative; z-index: 1; width: min(82%, 320px); margin: -18px auto 0; }
 .hero-friends-img { display: block; width: 100%; height: auto; }
 .hero-bell { position: absolute; z-index: 3; top: 4px; right: 4px; display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: white; box-shadow: 0 10px 22px -8px rgba(10,60,40,.28); color: var(--color-ink); }

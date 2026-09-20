@@ -25,7 +25,7 @@ export default async function HomePage() {
           </div>
           <div className="hero-friends">
             <Image
-              src="/banner.png"
+              src="/chanks-friends.png"
               alt="Three friends smiling together"
               width={1685}
               height={933}
